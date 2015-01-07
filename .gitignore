@@ -1,0 +1,26 @@
+*.svg
+*a_star
+# ignore pdf outputs
+*.pdf 
+*.aux 
+*.log
+*.ps
+*.dvi
+*.png
+*-*.pdf
+*-*.aux
+*pickle
+*.bak
+*.sw*
+*~
+\#*\#
+*.ipynb
+*.pyc
+*.txt
+*monomial_simplification
+test_database
+*adem_database
+*commutativity_database
+test_notebook.py
+*.shelf
+*.sql
