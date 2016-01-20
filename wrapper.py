@@ -348,6 +348,10 @@ class MASS(object):
         _file.write(output)
         _file.close()
 
+    def compute_product_structure(self):
+        self.get_E_2_page_no_mat().compute_product_structure(self.get_options())
+        
+        
     def make_product_database(self):
         e2 = self.get_E_2_page_no_mat()
         EtwoStore.prepare()

@@ -1,3 +1,5 @@
+\documentclass{article}
+
 % Motivic Adams Spectral Sequence Calculator
 % Copyright (C) 2016 Glen Matthew Wilson
 
@@ -16,8 +18,6 @@
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 % 02110-1301 USA.
 
-\documentclass{article}
-
 \begin{document}
 
 \title{Motivic Adams spectral sequence program}
@@ -29,6 +29,144 @@
 \section{Introduction}
 
 \section{Basic operation of program}
+The most basic operation of the program using the wrapper class to
+make the commands simple to enter. Create a new python script file and
+start by importing the classes and functions from the wrapper file.
+
+\begin{quote}
+\begin{verbatim}
+from wrapper import *
+\end{verbatim}
+\end{quote}
+
+The program will produce the $E_2$ page of either the motivic Adams
+spectral sequence over certain fields $k$, or of the Adams spectral
+sequence in topology. You must declare which case you would like to
+calculate by modifying the program options. The default options shold
+be good enough to get you started. You can choose the default options
+for calculation the motivic Adams spectral sequence over the real
+numbers with the following.
+\begin{quote}
+\begin{verbatim}
+options = Options.default("Real")
+\end{verbatim}
+\end{quote}
+
+We then declare our spectral sequence object by entering the
+following.
+\begin{quote}
+\begin{verbatim}
+myss = MASS(options)
+\end{verbatim}
+\end{quote}
+You can then start the MASS calculation with the following command.
+\begin{quote}
+\begin{verbatim}
+myss.start_session()
+\end{verbatim}
+\end{quote}
+
+This program calculates the $E_2$ page of the Adams spectral sequence
+by constructing a minimal resolution of $H^{**}$ by $\mathcal{A}^{**}$
+modules, then dualize and take cohomology. We first ask the program to
+calculate the minimal resolution. 
+\begin{quote}
+\begin{verbatim}
+myss.make_no_mat_resolution()
+\end{verbatim}
+\end{quote}
+You can now end your session with 
+\begin{quote}
+\begin{verbatim}
+myss.stop_session()
+\end{verbatim}
+\end{quote}
+which will save the minimal resolution you just calculated. You can
+now try running your script file. With the default options, you should
+see several new files in your working directory \texttt{real\_*}. 
+
+The file \texttt{real\_log.log} will store a great deal of information
+about the calculation. If you followed the above directions, this file
+will contain information on the construction of the minimal resolution
+$\cdots \to P_2 \to P_1 \to P_0 \to H^{**}$. The program starts off
+with the evident map $P_0 = \mathcal{A}^{**} \to H^{**}$ and sets
+$P_1 = 0$ to start. Then by checking the kernel of $P_0 \to H^{**}$
+and the image of $P_1 \to P_0$ in each degree, it will add generators
+to $P_1$ as necessary until it is exact in each degree.
+
+The log file shows the program starts with the degree 0 weight 0 part
+of the first map (corresponding to stem -1, weight 0, filtration 1)
+and observes that the kernel is 0 dimensional, and the map
+$P_1 \to P_0$ as defined thus far has 0 dimensional image in this
+graded piece. So the program doesn't need to add a new generator to
+$P_1$ yet.
+
+We see that the next graded piece is $(1,0)$. Here the kernel is 1
+dimensional, and the image is 0 dimensional, so a generator must be
+added to $P_1$. The log file shows a new generator is needed, and
+describes the name given to it \texttt{h1(1,0)0}. The general naming
+scheme of generators is \texttt{hf(d,w)n} where $f$ indicates the
+generator is added to $P_f$ in the minimal resolution, $d$ is the
+degree, $w$ is the weight, and $n$ is used to distinguish between
+generators in the same filtration, degree, and weight.
+
+The next interesting point in the log file is at the graded piece
+$(2,1)$. Here we expect the class $h_1$ to make an appearance. Indeed
+it does, and the internal program name for this class is
+\texttt{h1(2,1)0}.
+
+Writing all of this information to the log file does slow the program
+down. You can turn off logging with the command
+\begin{quote}
+\texttt{myss.set\_logging\_level(logging.ERROR)}
+\end{quote}
+or increase the amount of logging with logging level
+\texttt{logging.DEBUG}. You can return the logging level to default
+with the level \texttt{logging.WARNING}.
+
+To calculate the $E_2$ page of the MASS, we still need to dualize this
+minimal resolution and calculate its cohomology and product structure.
+This can be accomplished with the following commands. 
+\begin{quote}
+\begin{verbatim}
+myss.make_dual_resolution()
+myss.compute_product_structure()
+\end{verbatim}
+\end{quote}
+The $E_2$ page of the MASS has now been calculated. There are several
+options available to saving and presenting this information. The first
+is to save the vector space and product structure to a MYSQL
+database. Insert the details of your MySQL database into the file
+\texttt{./db/etwo.py}. The structure of the $E_2$ page can now be
+saved to your database with the
+following command.
+\begin{quote}
+\begin{verbatim}
+myss.make_product_database()
+\end{verbatim}
+\end{quote}
+
+You can also produce charts of the $E_2$ page with the help of the
+\texttt{matplotlib} library. There are several plot options available.
+The default plots can be obtained with the following command.
+\begin{quote}
+\begin{verbatim}
+myss.make_charts()
+\end{verbatim}
+\end{quote}
+
+The commands \texttt{myss.make\_resolution(),
+  myss.make\_no\_mat\_resolution(), myss.make\_dual\_resolution()}
+only need to be run once for a particular configuration. Running them
+again will just waste a lot of time, so comment them out of your
+script after they have been run once. If you change the bounds, you'll
+need to run these commands again.
+
+As it currently stands, you must run
+\texttt{myss.compute\_product\_structure()} in each session if a
+command will depend on the product structure, e.g.,
+\texttt{make\_product\_database}.
+
 
 \section{Nuts and bolts}
 

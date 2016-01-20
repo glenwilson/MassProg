@@ -17,3 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301 USA.
 
+-----------------------------------------------------------------------
+
+The program documentation is located in ProgramInformation.pdf.
+
+To get started right away, try running the python script test_fo3.py,
+modifying the options in the file if necessary.
+
+

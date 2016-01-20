@@ -171,7 +171,7 @@ class Options(object):
         if (isinstance(self.commutativity_database, 
                        PickleStorage) \
                 and not self.comm_db_flag):
-            print "loading comm db"
+            #print "loading comm db"
             self.commutativity_database.load_dictionary()
             self.comm_db_flag = True
         return self.commutativity_database
@@ -179,7 +179,7 @@ class Options(object):
     def get_adem_db(self):
         if isinstance(self.adem_database, PickleStorage) \
                 and not self.adem_db_flag:
-            print "loading adem db"
+            #print "loading adem db"
             self.adem_database.load_dictionary()
             self.adem_db_flag = True
         return self.adem_database

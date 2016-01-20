@@ -35,6 +35,7 @@ def generate_plots(E2_page, level, options):
     pyplot.ylim([-bounds[1]-1, bounds[1]+1])
     pyplot.gca().invert_yaxis()
     pyplot.savefig("E2" + str(level) + "-plot")
+    pyplot.close()
 
 def my_line(x, level, bound):
     return x + level - bound
@@ -99,6 +100,7 @@ def real_plots_standard(E2_page, level, options, bounds = None):
                        str(bounds[1]) + "-plot.png")
 #    pyplot.savefig(options.get_case() + "E2-" + str(level) + "-" + str(bounds[0]) + 
 #                   str(bounds[1]) + "-plot.svg")
+    pyplot.close()
 
 def complex_plots_standard(E2_page, level, options, bounds = None):
     """
@@ -142,6 +144,7 @@ def complex_plots_standard(E2_page, level, options, bounds = None):
     pyplot.gca().invert_yaxis()
     pyplot.savefig(options.get_case() + "E2-" + str(level) + "-" + str(bounds[0]) + 
                    str(bounds[1]) + "-plot", dpi=200)
+    pyplot.close()
 
 def complex_generator_plot(E2_page, options):
     pyplot.clf()
@@ -173,6 +176,7 @@ def complex_generator_plot(E2_page, options):
     pyplot.title("E2 term of MASS over " + options.get_case() + " motivic weight supressed")
     pyplot.savefig(options.get_case() + "E2" + str(bounds[0]) + 
                    str(bounds[1]) + "-plot", dpi=200)
+    pyplot.close()
 
 
 def fixed_weight_plot(E2_page, weight, options):
@@ -220,7 +224,8 @@ def fixed_weight_plot(E2_page, weight, options):
                             logging.warning( "B")
                             logging.warning( new_cohom.get_B())
                             logging.warning("product is not in cohomology!!!")
-                            raise TypeError("product is not in cohomology!!!")
+                            #raise TypeError("product is not in cohomology!!!")
+                            return
                         zero = new_cohom.get_zero_vector()
                         if new_cohom.are_cohomologous(zero, prod):
                             logging.warning( "basis for cohomology, prod was zero")
@@ -294,6 +299,7 @@ def fixed_weight_plot(E2_page, weight, options):
                            str(bounds[1]) + "weight-n" + str(abs(weight))+".png")
 #        pyplot.savefig(options.get_case() + "E2" + str(bounds[0]) + 
 #                       str(bounds[1]) + "weight-n" + str(weight)+".svg")
+    pyplot.close()
 
 def product_plot(E2_page, weight, options):
     pyplot.clf()
@@ -379,6 +385,8 @@ def product_plot(E2_page, weight, options):
                        str(bounds[1]) + "weight-n" + str(weight)+".png")
 #        pyplot.savefig(options.get_case() + "E2" + str(bounds[0]) + 
 #                       str(bounds[1]) + "weight-n" + str(weight)+".svg")
+    pyplot.close()
+
 
 def isaksen_chart(E2_page, diff, options):
     """
@@ -545,7 +553,8 @@ def isaksen_chart(E2_page, diff, options):
     else:
         pyplot.savefig(options.get_case() + "E2" + str(bounds[0]) + 
                        str(bounds[1]) + "diff-n" + str(diff)+".png")
-
+    pyplot.close()
+        
 def classical_chart(E2_page, options):
     """
     diff is an integer. Produces a chart where each column corresponds
@@ -664,6 +673,7 @@ def classical_chart(E2_page, options):
     pyplot.ylabel("Ext grading")
     pyplot.title("E2 term of MASS over " + options.get_case())
     pyplot.savefig(options.get_case() + "E2" + str(bounds[0]) +  ".svg")
+    pyplot.close()
 
 def generator_plot(E2_page, level, options, bounds = None):
     pyplot.clf()
@@ -716,6 +726,7 @@ def generator_plot(E2_page, level, options, bounds = None):
     pyplot.gca().invert_yaxis()
     pyplot.savefig(options.get_case() + "E2" + str(level) + str(bounds[0]) + 
                    str(bounds[1]) + "-plot", dpi=200)
+    pyplot.close()
 
 def charts(E2_page, options):
     logging.basicConfig(filename=options.get_log_file(), level=options.get_logging_level())
