@@ -19,7 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 
 -----------------------------------------------------------------------
 
-The program documentation is located in ProgramInformation.pdf.
+The program documentation is located in ProgramInformation.pdf; run
+pdflatex on ProgramInformation.tex to generate the PDF file.
 
 To get started right away, try running the python script test_fo3.py,
 modifying the options in the file if necessary.

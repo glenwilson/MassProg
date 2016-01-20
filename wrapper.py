@@ -275,6 +275,8 @@ class MASS(object):
         charts(self.get_E_2_page(), self.options)
 
     def make_isaksen_chart(self):
+        if self.options.get_case() == "Classical":
+            return
         for diff in range(0, self.options.get_degree_bounds()[0]):
             isaksen_chart(self.get_E_2_page(), diff, self.options)
 

@@ -156,10 +156,10 @@ def complex_generator_plot(E2_page, options):
     for level in range(0, len(E2_page.get_resolution().get_map_list()) ):
         sheet = E2_page.get_cohomology(options)[level]
         for position in sheet:
-            print "level " + str(level) + " position" + str(position)
+#            print "level " + str(level) + " position" + str(position)
             for vector in sheet[position].get_cohomology().get_basis():
                 printout = E2_page.get_dual_resolution(options).get_map_list()[level].get_domain().element_from_vector(position, vector, options)
-                print printout
+#                print printout
 #this if statement rules out getting cohom from 0 dimensional vspaces
                 if E2_page.get_dual_resolution(options).get_map_list()[level].get_domain().get_array(options)[position].get_basis():
                     x.append(position[0] - level )
@@ -742,6 +742,8 @@ def charts(E2_page, options):
         for level in xrange(options.get_degree_bounds()[0]/2 ):
             complex_plots_standard(E2_page, level, options)
         complex_generator_plot(E2_page, options)
+        alist = range(-options.get_degree_bounds()[0]/2, options.get_degree_bounds()[0]/2 + 1)
+        alist.reverse()
         for weight in alist:
             fixed_weight_plot(E2_page, weight, options)
     elif options.get_case() == "Classical":

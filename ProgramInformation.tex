@@ -29,6 +29,8 @@
 \section{Introduction}
 
 \section{Basic operation of program}
+\subsection{Charts and product database}
+
 The most basic operation of the program using the wrapper class to
 make the commands simple to enter. Create a new python script file and
 start by importing the classes and functions from the wrapper file.
@@ -164,9 +166,29 @@ need to run these commands again.
 
 As it currently stands, you must run
 \texttt{myss.compute\_product\_structure()} in each session if a
-command will depend on the product structure, e.g.,
+command will depend on the product structure, for example,
 \texttt{make\_product\_database}.
 
+\subsection{Changing bounds}
+
+If you ran the above with the default options, the program will stop
+once it gets to degree 12 and weight 6. Should you wish to calculate
+beyond these bounds, you need to declare this in the options
+variable. Use the following command to do so. 
+\begin{quote}
+\begin{verbatim}
+myss.set_degree_bounds((18, 9))
+\end{verbatim}
+\end{quote}
+The bounds should be of the form $(2n, n)$ for a natural number $n$,
+although it isn't strictly necessary.
+
+Once you reset the bounds, you'll need to generate the resolution,
+dual resolution, and product structures again. The program is able to
+use the existing resolution information and just add on to it. This
+cuts down on duplicated calculations.
+
+\subsection{Massey products}
 
 \section{Nuts and bolts}
 
