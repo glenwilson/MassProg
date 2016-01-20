@@ -84,7 +84,8 @@ class MASS(object):
         """
         self.get_options().get_comm_db().shutdown()
         self.get_options().get_adem_db().shutdown()
-        self.get_E_2_page().pickle_lol_storage(self.get_options())
+        self.get_E_2_page_no_mat().pickle_lol_storage(self.get_options())
+        #which E_2_page gets the LOL?
 
     def initialize_resolution(self):
         module_map = make_initial_map(self.get_options())
@@ -269,6 +270,8 @@ class MASS(object):
         charts(self.get_E_2_page_no_mat(), self.options)
 
     def make_charts_with_mat(self):
+        #Important note: list of lifts is only saved for 
+        #E_2 page without mat! 
         charts(self.get_E_2_page(), self.options)
 
     def make_isaksen_chart(self):

@@ -61,6 +61,7 @@ class E2Page(object):
 
     def get_lol_storage(self, options):
         #attempt to load pickle if lol_flag = False
+        #print "the lol flag is:" + str(self.lol_flag)
         if self.lol_flag:
             return self.lol_storage
         else:
@@ -81,17 +82,17 @@ class E2Page(object):
                     #the list of lifts
                     self.lol_storage = {}
                     print "nothing pickled!"
-                self.lol_flag = True
             except (IOError, EOFError):
                 self.lol_storage = {}
-                self.lol_flag = True
                 print "loading not a success"
+        self.lol_flag = True
         return self.lol_storage
 
     def pickle_lol_storage(self, options):
         print "trying to pickle lol storage"
+        print "the pickle flag is:" + str(self.lol_flag)
         pickle_file = open(options.get_lol_file(), "wb")
-        pickling = [options.get_degree_bounds(), self.get_lol_storage(options)]
+        pickling = [options.get_degree_bounds(), self.lol_storage]
         pickle.dump(pickling, pickle_file, -1)
         pickle_file.close()
 
