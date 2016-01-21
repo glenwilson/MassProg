@@ -1,12 +1,12 @@
 \documentclass{article}
 
-% Motivic Adams Spectral Sequence Calculator
-% Copyright (C) 2016 Glen Matthew Wilson
+% Motivic Adams Spectral Sequence Calculator Copyright (C) 2016 Glen
+% Matthew Wilson
 
 % This program is free software; you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 2 of the License, or (at
-% your option) any later version.
+% the Free Software Foundation; either version 2 of the License, or
+% (at your option) any later version.
 
 % This program is distributed in the hope that it will be useful, but
 % WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,16 +17,16 @@
 % along with this program; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 % 02110-1301 USA.
+\newcommand{\Sq}{\mathrm{Sq}}
+\newcommand{\calA}{\mathcal{A}}
 
+\usepackage{amssymb,amsmath}
 \begin{document}
 
-\title{Motivic Adams spectral sequence program}
-\author{Knight Fu \and Glen M. Wilson}
+\title{Motivic Adams spectral sequence program} \author{Knight Fu \and
+  Glen M. Wilson}
 
 \maketitle
-
-
-\section{Introduction}
 
 \section{Basic operation of program}
 \subsection{Charts and product database}
@@ -71,13 +71,13 @@ myss.start_session()
 This program calculates the $E_2$ page of the Adams spectral sequence
 by constructing a minimal resolution of $H^{**}$ by $\mathcal{A}^{**}$
 modules, then dualize and take cohomology. We first ask the program to
-calculate the minimal resolution. 
+calculate the minimal resolution.
 \begin{quote}
 \begin{verbatim}
 myss.make_no_mat_resolution()
 \end{verbatim}
 \end{quote}
-You can now end your session with 
+You can now end your session with
 \begin{quote}
 \begin{verbatim}
 myss.stop_session()
@@ -85,7 +85,7 @@ myss.stop_session()
 \end{quote}
 which will save the minimal resolution you just calculated. You can
 now try running your script file. With the default options, you should
-see several new files in your working directory \texttt{real\_*}. 
+see several new files in your working directory \texttt{real\_*}.
 
 The file \texttt{real\_log.log} will store a great deal of information
 about the calculation. If you followed the above directions, this file
@@ -120,7 +120,7 @@ it does, and the internal program name for this class is
 Writing all of this information to the log file does slow the program
 down. You can turn off logging with the command
 \begin{quote}
-\texttt{myss.set\_logging\_level(logging.ERROR)}
+  \texttt{myss.set\_logging\_level(logging.ERROR)}
 \end{quote}
 or increase the amount of logging with logging level
 \texttt{logging.DEBUG}. You can return the logging level to default
@@ -128,7 +128,7 @@ with the level \texttt{logging.WARNING}.
 
 To calculate the $E_2$ page of the MASS, we still need to dualize this
 minimal resolution and calculate its cohomology and product structure.
-This can be accomplished with the following commands. 
+This can be accomplished with the following commands.
 \begin{quote}
 \begin{verbatim}
 myss.make_dual_resolution()
@@ -140,8 +140,7 @@ options available to saving and presenting this information. The first
 is to save the vector space and product structure to a MYSQL
 database. Insert the details of your MySQL database into the file
 \texttt{./db/etwo.py}. The structure of the $E_2$ page can now be
-saved to your database with the
-following command.
+saved to your database with the following command.
 \begin{quote}
 \begin{verbatim}
 myss.make_product_database()
@@ -174,7 +173,7 @@ command will depend on the product structure, for example,
 If you ran the above with the default options, the program will stop
 once it gets to degree 12 and weight 6. Should you wish to calculate
 beyond these bounds, you need to declare this in the options
-variable. Use the following command to do so. 
+variable. Use the following command to do so.
 \begin{quote}
 \begin{verbatim}
 myss.set_degree_bounds((18, 9))
@@ -191,5 +190,245 @@ cuts down on duplicated calculations.
 \subsection{Massey products}
 
 \section{Nuts and bolts}
+
+\subsection{Algebraic objects}
+
+\subsubsection{\tt monomial.py}
+This file defines the \texttt{Monomial} class.  Monomial objects
+consist of a tuple of pairs (object, exponent) and a coefficient (mod
+2). Object can be either a string or integer. If an integer, it is
+considered as an indexed variable $\mathrm{Sq}^i$.  Take, for example,
+\begin{quote}
+\begin{verbatim}
+Monomial((("t", 2), (3, 1), ("p", 1)), 1)
+\end{verbatim}
+\end{quote}
+which, if interpreted in the mod 2 Steenrod algebra over $\mathbb{R}$,
+is $\tau^2 (\mathrm{Sq}^3)^1 \rho^1$.
+
+The most important methods of the class are {\tt collect\_terms,
+  expand\_terms, left\_multiply, right\_multiply}. See the docstrings
+for more on the use of these methods.
+
+\subsubsection{\tt polynomial.py}
+This file defines the \texttt{Polynomial} class. Polynomial objects
+consist of a tuple of monomial objects. The object represents the sum
+of the monomial objects in the tuple.
+
+Methods are defined so that polynomial objects can be added with the
+``+'' binary operation, e.g., if $A$ and $B$ monomial objects, then
+{\tt Polynomial((A)) + Polynomial((B))} returns the object {\tt
+  Polynomial((A, B))}. Similarly, multiplication is defined, and the
+binary operator ``*'' can be used to multiply polynomials.
+
+\subsubsection{ {\tt r\_monomial.py}}
+The {\tt RMonomial} class defines specific Monomial objects which are
+custom tailored to represent monomials in the motivic Steenrod
+algebra. 
+
+Of great importance is the method {\tt case\_modification} which will
+update a monomial to reflect the structure of motivic cohomology of
+the given field. (If you want to add your own field, you need to add
+the correct procedure for your field.)
+
+{\tt RMonomial} objects are used to represent both elements in the
+motivic Steenrod algebra and the dual motivic Steenrod
+algebra. Several methods are given for changing notation
+appropriately, e.g., {\tt dualize, make\_dual, make\_standard}.
+
+When this class is used in the motivic Steenrod algebra, the method
+{\tt is\_admissible} is used in getting normal forms for monomials.
+
+\subsubsection{ {\tt r\_polynomial.py}}
+The {\tt RPolynomial} class is a specific instance of the Polynomial
+object which is custom tailored for use to represent general members
+of the motivic Steenrod algebra. The defining tuple of monomial
+objects should consist of {\tt RMonomial} objects.
+
+This class implements methods to use the Adem relations and reach a
+canonical form for any element of the motivic Steenrod algebra. As
+this is a rather computationally intensive process, as the program
+discovers relations in the motivic Steenrod algebra it stores them in
+a database for future use. There are three database object types which
+are supported: pickled databases, shelf storage, and memory
+storage. The pickled storage has the advantage that the relations are
+saved for future sessions, which speeds up the user interface. 
+
+Given an RPolynomial object {\tt X}, simply run {\tt X.simplify()} to
+mutate {\tt X} into canonical form.
+
+The Adem relations and commutation relations involving the motivic
+cohomology of the field are also coded up in this file. These will
+need to be modified for fields with mod 2 motivic cohomology different
+from $\mathbb{R}$, $\mathbb{C}$, $\mathbb{F}_q$.
+
+\subsubsection{ {\tt r\_steenrod\_algebra.py}}
+
+This file defines helper functions to produce RPolynomial and
+RMonomial objects.{\tt RSq} takes in an arbitrary number of arguments
+which are either natural numbers or elements of the motivic cohomology
+of the base field, e.g., {\tt "t", "p", "u"}. The command {\tt
+  RSq("p",2,3,"t")} defines the RPolynomial object corresponding to
+$\rho \Sq^2\Sq^3\tau$ in the motivic Steenrod algebra over a field.
+The command {\tt RSq()} returns the unit in the motivic Steenrod
+algebra.
+
+\subsubsection{ {\tt stack\_obj.py}}
+
+This file defines a class for a stack object used in the methods to
+simplify an element of the motivic Steenrod algebra, i.e., an
+RPolynomial. 
+
+\subsection{Storage objects}
+
+\subsubsection{ {\tt pickle\_storage.py}}
+
+The program is set up to expect storage objects, as declared in the
+{\tt Options} class for a given session. Storage objects need to have
+the following methods: {\verb|__iter__,|} {\tt next, copy, read,
+  contains, write}.
+
+{\tt PickleStorage} is one instance of a storage object, and the
+default choice used by the program. {\tt PickleStorage} uses a python
+manager to control access to a dictionary. This allows
+multiprocessing, which speeds up the procedures for simplifying
+RPolynomial objects.
+
+\subsubsection{ {\tt shelf\_storage.py}} 
+
+{\tt ShelfStorage} is another storage object which utilizes shelves as
+the method of storage. Shelf storage is a bit slow compared to pickle
+storage or memory storage.
+
+\subsubsection{ {\tt mem\_storage.py}}
+
+{\tt MemStorage} is another storage object which just keeps everything
+in memory. It is faster than {\tt PickleStorage} or {\tt
+  ShelfStorage}, but it does not save the information generated for
+future sessions.
+
+\subsection{Linear algebra}
+
+\subsubsection{{\tt vector\_space.py}}
+The {\tt ModTwoVectorSpace} object consists of a list of basis
+elements.
+
+\subsubsection{{\tt bit\_vector.py}}
+The class {\tt BitVector} enables efficient mod 2 linear algebra to
+take place. The static method {\tt random\_vector} is useful when
+testing methods. A random vector of lenght {\tt length} is obtained
+by{\tt x = BitVector.random\_vector(length)}. Methods for addition, dot
+products, printing, and pickling are included. 
+
+A {\tt BitVector} object uses arrays to store a sequence of integers
+whose description in base 2 corresponds to the desired vector. What follows is some sample code of how to use bit vectors. 
+
+\begin{quote}
+\begin{verbatim}
+from bit_vector import *
+x = BitVector(5); y = BitVector(5)
+z = x + y
+print x, y, z
+x[2] =1, y[4]=1
+z = x+y
+print x, y, z
+print x*y, x*z
+t= BitVector.random_vector(5)
+print t*x, t*y, t*z
+\end{verbatim}
+\end{quote}
+
+\subsubsection{{\tt bit\_matrix.py}} 
+
+{\tt BitMatrix} objects are lists of {\tt BitVectors} of the same
+length. The static methods {\tt identity\_matrix(n),
+  get\_blank\_matrix(m,n), get\_random\_matrix(m,n)} return the
+$n\times n$ identity matrix, the $m\times n$ $0$ matrix, and a random
+matrix of size $m \times n$ respectively.
+
+The {\tt BitMatrix} class as methods to calculate the reduced row
+echelon form of a matrix. The reduced row echelon form and the change
+of basis matrix are saved by the objcet to reduce computing
+time. There are several methods available for finding the inverse of a
+matrix, performing transpose, addition, multiplication, and solving
+linear equations.
+
+\subsubsection{{\tt cohomology.py}}
+
+A {\tt Cohomology} object consists of two bit matrices $B$ and
+$A$. The assumption is that the matrices fit into the cochain complex
+\begin{equation*}
+  C^{-1} \xrightarrow{A} C^0 \xrightarrow{B} C^{1},
+\end{equation*}
+that is, the product $B*A$ is defined and is zero. 
+
+The primary method for this class is {\tt get\_cohomology()}. This
+command will return a {\tt ModTwoVectorSpace} object with basis
+consisting of {\tt BitVector} objects. This is just a particular
+choice of representatives for a particular basis of $ker(B)/im(A)$.
+
+\subsection{Homological algebra}
+
+\subsubsection{{\tt generator.py}}
+
+A {\tt Generator} object consists of a name (which is a string), and a
+degree. Generator objects are used to define free modules over the
+motivic Steenrod algebra. 
+
+\subsubsection{{\tt free\_A\_module.py}}
+
+The file {\verb|free_A_module.py|} contains several class definitions
+to make it possible to work wtith free modules over the motivic
+Steenrod algebra. A {\tt ModuleMonomial} consists of an {\tt
+  RPolynomial} object and a {\tt Generator} object. So, for example,
+\begin{verbatim}
+h = Generator("h1", (1,1))
+x = ModuleMonomial(RSq(1), h)
+\end{verbatim}
+defines $x = \Sq^1 h_1$ which has degree 2 and weight 1.
+
+The class {\tt ModuleElement} is used to represent a general element
+in a free module over the motivic Steenrod algebra. The most important
+method is {\tt canonical\_form(options)} which gives the canonical form
+of a module element with respect to a fixed basis of the free module. 
+
+Wrapper classes are {\tt ModElt} and {\tt ModEltList}. The first takes
+as arguments any number of {\tt ModuleMonomial} objects, and the
+latter accepts a list of {\tt ModuleMonomial} objects.
+
+A free module over the motivic Steenrod algebra is defined using the
+class {\tt FreeAModule}. A {\tt FreeAModule} object is specified by a
+list of generator objects and degree bounds. For degree bounds
+$(x,y)$, the free module $M$ is determined for all bi-degrees
+$M^{a,b}$ with $-x \leq a \leq x$ and $-y \leq b \leq y$. 
+
+The information about the module is stored in {\tt self.array}. This
+is a dictionary whose keys are tuples $(x,y)$ corresponding to the
+bi-graded piece, with value a {\tt ModTwoVectorSpace}. There are
+methods to generate the array, i.e., determine the mod 2 module
+structure of the free module in the given bounds. 
+
+In each graded piece, one needs to switch back and forth between
+vector notation and the names in terms of the motivic Steenrod algebra
+and the generators. The methods {\tt element\_from\_vector}, and {\tt
+  vector\_from\_element} accomplish this.
+
+At the end of the file are functions which will calculate the motivic
+Steenrod algebra $\calA^{a,b}$ for bidegrees $a\leq x$ and $b\leq y$
+for the given degree bounds $(x,y)$. This is very time consuming, so
+it is saved for future use. There is a lot of room for improvement
+here!
+
+\subsection{{\tt module\_map.py}}
+
+\subsubsection{{\tt h\_star.py}}
+\subsubsection{{\tt h\_dual\_module.py}}
+\subsubsection{{\tt E2\_page.py}}
+\subsubsection{{\tt plot\_page.py}}
+\subsubsection{{\tt ./db/etwo.py}}
+\subsubsection{{\tt wrapper.py}}
+
+
+
 
 \end{document}

@@ -1,5 +1,9 @@
 class Generator(object):
     def __init__(self, name, degree):
+        """Name is to be a string, and degree is a tuple of integers of the
+        appropriate length for the given context.
+
+        """
         self.name = name
         self.degree = degree
 
